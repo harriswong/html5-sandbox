@@ -1,0 +1,47 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml">
+    <head>
+        <meta http-equiv="Content-Type" content="text/html; charset=utf-8"/>
+        <title>Mark test</title>
+        <link type="text/css" href="styles.css" rel="stylesheet" />
+        <script type="text/javascript" src="../lib/jquery.js"></script>
+        <script type="text/javascript" src="marker.js"></script>
+        <script type="text/javascript">
+            $(document).ready(function () {
+                $("p").mouseup(function (b) {
+                    var that = $("p");
+                    var selectedText = getSelectedText();
+                    markText(that, selectedText);
+                });
+            });
+            
+            //mark
+            var markText = function (that, input) {
+                var marked = $("<span></span>");
+                marked.attr("class", "markable");
+                marked.text(input);
+                newText = that.get(0).innerHTML.replace(input, marked.get(0).outerHTML);
+                that.html(newText);
+            };
+           
+            //Grab selected text
+            var getSelectedText = function () {
+                if(window.getSelection){
+                    return window.getSelection().toString();
+                }
+                else if(document.getSelection){
+                    return document.getSelection();
+                }
+                else if(document.selection){
+                    return document.selection.createRange().text;
+                }
+            }
+        </script>
+    </head>
+    <body>
+        <p>Hey everyone!
+
+We recently announced the dates for our next jQuery Conference—October 1st and 2nd in Boston, MA—and we’re finally ready to open registration! Here are some top level bullet points for you:
+</p>
+    </body>
+</html>
