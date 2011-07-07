@@ -15,13 +15,24 @@
                 });
             });
             
+            // replaceAll function
+            var replaceAll = function (searchFor, replacedWith, searchIn) {
+                return searchIn.replace(new RegExp(searchFor, 'g'), replacedWith);
+            };
+            
+            // simple stripe jquery obj function
+            var stripeHtmlTags = function (input) {
+                return input.html(input.text());
+            };
+            
             //mark
             var markText = function (that, input) {
-                var marked = $("<span></span>");
+                var wrapper = $("<div></div>");
+                var marked = $("<mark></mark>");
                 marked.attr("class", "markable");
                 marked.text(input);
-                newText = that.get(0).innerHTML.replace(input, marked.get(0).outerHTML);
-                that.html(newText);
+                wrapper.append(marked);
+                that.html(replaceAll(input, wrapper.get(0).innerHTML, stripeHtmlTags(that).text()));
             };
            
             //Grab selected text
@@ -39,9 +50,6 @@
         </script>
     </head>
     <body>
-        <p>Hey everyone!
-
-We recently announced the dates for our next jQuery Conference—October 1st and 2nd in Boston, MA—and we’re finally ready to open registration! Here are some top level bullet points for you:
-</p>
+        <p>Hey everyone! We recently announced the dates for our next jQuery Conference—October 1st and 2nd in Boston, MA—and we’re finally ready to open registration! Here are some top level bullet points for you:</p>
     </body>
 </html>
