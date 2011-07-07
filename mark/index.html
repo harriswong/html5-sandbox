@@ -32,7 +32,7 @@
                 marked.attr("class", "markable");
                 marked.text(input);
                 wrapper.append(marked);
-                that.html(replaceAll(input, wrapper.get(0).innerHTML, stripeHtmlTags(that).text()));
+                that.html(replaceAll(input, wrapper.html(), stripeHtmlTags(that).text()));
             };
            
             //Grab selected text
