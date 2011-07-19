@@ -21,7 +21,13 @@
                 navigator.geolocation.getCurrentPosition(function(position) {
                     console.log(position);
                     $('p').text("You are at latitude: "  + position.coords.latitude + ", longitude: " + position.coords.longitude);
-                    $('#address').text('Your address is: ' + addressString(position.address));
+                    console.log(position.address);
+                    /*
+                     * address only supports in FF?
+                     */
+                    if (position.address) { 
+                        $('#address').text('Your address is: ' + addressString(position.address));
+                    }
                     
                     //Settings for the map
                     var point = new google.maps.LatLng(position.coords.latitude, position.coords.longitude);  
