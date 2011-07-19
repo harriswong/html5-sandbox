@@ -1,0 +1,53 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml">
+    <head>
+        <meta http-equiv="Content-Type" content="text/html; charset=utf-8"/>
+        <title>Geolocation test</title>
+        <link type="text/css" href="styles.css" rel="stylesheet" />
+        <script type="text/javascript" src="../lib/jquery.js"></script>
+        
+        <script src="http://maps.google.com/maps/api/js?sensor=true"></script>
+        <script type="text/javascript">
+            var addressString = function (addressObj) {
+                return addressObj.streetNumber 
+                    + " " + addressObj.street 
+                    + ", " + addressObj.city 
+                    + ", " + addressObj.region 
+                    + ", " + addressObj.country 
+                    + ", " + addressObj.postalCode;
+            };
+            
+            if (navigator.geolocation) {
+                navigator.geolocation.getCurrentPosition(function(position) {
+                    console.log(position);
+                    $('p').text("You are at latitude: "  + position.coords.latitude + ", longitude: " + position.coords.longitude);
+                    $('#address').text('Your address is: ' + addressString(position.address));
+                    
+                    //Settings for the map
+                    var point = new google.maps.LatLng(position.coords.latitude, position.coords.longitude);  
+                    myOptions = {
+                        zoom: 15,
+                        center: point,
+                        mapTypeId: google.maps.MapTypeId.ROADMAP
+                    },
+                   
+                    //Pass in the div and map settings to the map
+                    map = new google.maps.Map($('#google-map').get(0), myOptions),
+                   
+                    marker = new google.maps.Marker({
+                        position: point,
+                        map: map,
+                        title: "You are here"
+                    });
+                });
+            } else {
+                alert("I'm sorry, but geolocation services are not supported by your browser.");
+            }
+        </script>
+    </head>
+    <body>
+        <p></p>
+        <p id="address"></p>
+        <div id="google-map"></div>
+    </body>
+</html>
