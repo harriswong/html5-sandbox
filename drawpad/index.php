@@ -36,6 +36,9 @@
              * @param   obj     DOM event obj
              */
             var stopDrawing = function(x, y, e) {
+                //reset old coordinates
+                oldX = 0;
+                oldY = 0;
                 console.log('stopDrawing: ', x, y, e);
             };
 
