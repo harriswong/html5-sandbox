@@ -5,15 +5,15 @@
     <script type="text/javascript" src="drawpad.js"></script>
     <script type="text/javascript">
         $(document).ready(function () {
-            var paperX = 10;   //paper x-coord
-            var paperY = 50;   //paper y-coord
             var paperW = 320;   //paper width
             var paperH = 320; //paper height
             var oldX;   //last clicked pen point-x
             var oldY;   //last clicked pen point-y
             
             // Creates canvas 320 × 320 at 10, 50, absolute
-            var paper = Raphael(paperX, paperY, paperW, paperH);
+            var paper = Raphael($("#canvas")[0], paperW, paperH);
+            var paperX = $(paper.canvas).offset().left;   //paper x-coord
+            var paperY = $(paper.canvas).offset().top;   //paper y-coord
 
             // Creates a rectangle
             var rect = paper.rect(0, 0, paperW, paperH);
@@ -101,5 +101,10 @@
 <body>
     <p>Draw here: </p>
     <div id="canvas"></div>
+    <div id="color-panel">
+        <input type="radio" name="pen-colour" value="yellow"/>
+        <input type="radio" name="pen-colour" value="black"/>
+        <input type="radio" name="pen-colour" value="blue"/>
+    </div>
 </body>
 </html>
