@@ -19,12 +19,12 @@ Drawpad.init = function(paperW, paperH) {
     
     // Creates canvas 320 × 320 at 10, 50, absolute
     Drawpad.paper = Raphael($("#canvas")[0], Drawpad.paperW, Drawpad.paperH);
-    var paperX = $(Drawpad.paper.canvas).offset().left;   //paper x-coord
-    var paperY = $(Drawpad.paper.canvas).offset().top;   //paper y-coord
+    Drawpad.paperX = $(Drawpad.paper.canvas).offset().left;   //paper x-coord
+    Drawpad.paperY = $(Drawpad.paper.canvas).offset().top;   //paper y-coord
 
     // Creates a rectangle background
-    var rect = Drawpad.paper.rect(0, 0, Drawpad.paperW, Drawpad.paperH);
-    rect.attr('fill', '#ddd');
+    Drawpad.rect = Drawpad.paper.rect(0, 0, Drawpad.paperW, Drawpad.paperH);
+    Drawpad.rect.attr('fill', '#ddd');
 
     /*
      * start drawing
@@ -61,7 +61,13 @@ Drawpad.init = function(paperW, paperH) {
     var startMoving = function(dx, dy, x, y, e) {
         console.log('startMoving: ', dx, dy, x, y, e, oldX, oldY);
         if (oldX && oldY) {
-            drawPath(oldX, oldY, x, y);
+            if (Drawpad.eraserOn) {
+                //if eraser
+                //TODO: Very slow.  Improve on speed.
+                erasePath(x - 10, y - 10, x + 10, y + 10);
+            } else {
+                drawPath(oldX, oldY, x, y);
+            }
         }
         oldX = x;
         oldY = y;
@@ -78,19 +84,29 @@ Drawpad.init = function(paperW, paperH) {
      * @param   int     y position of end point
      */
     var drawPath = function(x, y, x2, y2) {
-        x = x - paperX;
-        y = y - paperY;
-        x2 = x2 - paperX;
-        y2 = y2 - paperY;
+        x = x - Drawpad.paperX;
+        y = y - Drawpad.paperY;
+        x2 = x2 - Drawpad.paperX;
+        y2 = y2 - Drawpad.paperY;
         var path = Drawpad.paper.path("M" + x + " " + y + "L" + x2 + " " + y2);
         path.attr('stroke', Drawpad.inkColour);
         path.attr('stroke-width', Drawpad.inkSize);
-
-        path.mouseover(function(a, b, c) {
-            console.log(a, b, c);
-//            paper.getElementByPoint
-        });
         console.log('Path drawn: ', path);
+    };
+
+    /**
+     * erase everything that's erasable
+     */
+    var erasePath = function (x, y, x2, y2) {
+        for (i = x; i <= x2; i++) {
+            for (j = y; j <= y2; j++) {
+                var element = Drawpad.paper.getElementByPoint(i, j);
+                console.log('Erasing: ', element, i, j);
+                if (element.type == 'path') {
+                    element.remove();
+                }
+            }
+        }
     };
 
     /**
@@ -104,7 +120,7 @@ Drawpad.init = function(paperW, paperH) {
      * scontext    object    context for drag start handler
      * econtext    object    context for drag end handler 
      */
-    rect.drag(startMoving, startDrawing, stopDrawing);
+    Drawpad.rect.drag(startMoving, startDrawing, stopDrawing);
             
     //bind all events
     Drawpad.bind();
@@ -117,6 +133,7 @@ Drawpad.init = function(paperW, paperH) {
 Drawpad.bind = function() {
     Drawpad.bindColourPanel();
     Drawpad.bindNewPad();
+    Drawpad.bindEraserButton();
 }
 
 /**
@@ -150,6 +167,30 @@ Drawpad.bindNewPad = function () {
     var newPad = $('.new-pad');
     newPad.bind('click', function(evt) {
         $('path').remove();
+    });
+}
+
+/**
+ * Bind eraser
+ */
+Drawpad.bindEraserButton = function () {
+    var eraserButton = $('.eraserButton');
+    eraserButton.bind('click', function(evt) {
+        var clickedButton = $(evt.currentTarget);
+        if (clickedButton.hasClass('clickedEraserButton')) {
+            Drawpad.eraserOn = false;
+            Drawpad.eraserArea.remove();
+            clickedButton.removeClass('clickedEraserButton');
+        } else {
+            clickedButton.addClass('clickedEraserButton');
+            Drawpad.eraserOn = true;
+            Drawpad.eraserArea = Drawpad.paper.rect(-100, -100, 20, 20, 2);
+            Drawpad.eraserArea.attr('stroke', 'black');
+            Drawpad.rect.mousemove(function(e, x, y) {
+                Drawpad.eraserArea.attr('x', x - 10 - Drawpad.paperX);
+                Drawpad.eraserArea.attr('y', y - 10 - Drawpad.paperY);
+            });
+        }
     });
 }
 
