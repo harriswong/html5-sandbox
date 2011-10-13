@@ -18,12 +18,12 @@ Drawpad.init = function(paperW, paperH) {
     var oldY;   //last clicked pen point-y
     
     // Creates canvas 320 × 320 at 10, 50, absolute
-    var paper = Raphael($("#canvas")[0], Drawpad.paperW, Drawpad.paperH);
-    var paperX = $(paper.canvas).offset().left;   //paper x-coord
-    var paperY = $(paper.canvas).offset().top;   //paper y-coord
+    Drawpad.paper = Raphael($("#canvas")[0], Drawpad.paperW, Drawpad.paperH);
+    var paperX = $(Drawpad.paper.canvas).offset().left;   //paper x-coord
+    var paperY = $(Drawpad.paper.canvas).offset().top;   //paper y-coord
 
     // Creates a rectangle background
-    var rect = paper.rect(0, 0, Drawpad.paperW, Drawpad.paperH);
+    var rect = Drawpad.paper.rect(0, 0, Drawpad.paperW, Drawpad.paperH);
     rect.attr('fill', '#ddd');
 
     /*
@@ -82,9 +82,14 @@ Drawpad.init = function(paperW, paperH) {
         y = y - paperY;
         x2 = x2 - paperX;
         y2 = y2 - paperY;
-        var path = paper.path("M" + x + " " + y + "L" + x2 + " " + y2);
+        var path = Drawpad.paper.path("M" + x + " " + y + "L" + x2 + " " + y2);
         path.attr('stroke', Drawpad.inkColour);
         path.attr('stroke-width', Drawpad.inkSize);
+
+        path.mouseover(function(a, b, c) {
+            console.log(a, b, c);
+//            paper.getElementByPoint
+        });
         console.log('Path drawn: ', path);
     };
 
@@ -111,6 +116,7 @@ Drawpad.init = function(paperW, paperH) {
  */
 Drawpad.bind = function() {
     Drawpad.bindColourPanel();
+    Drawpad.bindNewPad();
 }
 
 /**
@@ -134,6 +140,16 @@ Drawpad.bindColourPanel = function () {
         var clickedButton = $(evt.currentTarget);
         Drawpad.inkColour = 'black';
         commonBindings(Drawpad.black);
+    });
+}
+
+/**
+ * Bind new pad button
+ */
+Drawpad.bindNewPad = function () {
+    var newPad = $('.new-pad');
+    newPad.bind('click', function(evt) {
+        $('path').remove();
     });
 }
 
