@@ -76,6 +76,8 @@
                 x2 = x2 - paperX;
                 y2 = y2 - paperY;
                 var path = paper.path("M" + x + " " + y + "L" + x2 + " " + y2);
+//                path.attr('stroke', '#4D0066');
+//                path.attr('stroke-width', '2');
                 console.log('Path drawn: ', path);
             };
 
