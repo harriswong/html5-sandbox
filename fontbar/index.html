@@ -11,6 +11,7 @@
     <body>
         <script>
             $(document).ready(function() {
+                // fontsize adjustment
                 $( "#slider" ).slider({
                     value:15,
                     min: 15,
@@ -22,6 +23,19 @@
                         $(".content").css('font-size', ui.value + "px");
                         $(".content").css('line-height', Math.round(ui.value * lineHeightRatio) + "px");
                     }
+                });
+                
+                //colour contrast adjustment
+                var contrastState = 1; //1 for black text white background, 0 the opposite.
+                $("#change-contrast").bind("click", function(e) {
+                    if (contrastState === 0) {
+                        $("body").css('background-color', "#fff");
+                        $("body").css('color', "#000");
+                    } else {
+                        $("body").css('background-color', "#000");
+                        $("body").css('color', "#fff");
+                    }
+                    contrastState = Math.abs(contrastState - 1);
                 });
             });
         </script>
