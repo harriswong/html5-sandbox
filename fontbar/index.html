@@ -75,13 +75,21 @@
                     }
                     contrastState = Math.abs(contrastState - 1);
                 });
+                
+                //toggle state
+                $(".fontbar-more").bind("click", function (e) {
+                    $("#font-toolbar").toggle();
+                });
             });
         </script>
         
         <div class="container">
             <p class="content"> Grumpy wizards make toxic brew for the evil Queen and Jack. One morning, when Gregor Samsa woke from troubled dreams, he found himself transformed in his bed into a horrible vermin. He lay on his armour-like back, and if he lifted his head a little he could see his brown belly, slightly domed and divided by arches into stiff sections. The bedding was hardly able to cover it and seemed ready to slide off any moment. His many legs, pitifully thin compared with the size of the rest of him, waved about helplessly as he looked. One morning, when Gregor Samsa woke from troubled dreams, he found himself transformed in his bed into a horrible vermin. He lay on his armour-like back, and if he lifted his head a little he could see his brown belly, slightly domed and divided by arches into stiff sections. The bedding was hardly able to cover it and seemed ready to slide off any moment. His many legs, pitifully thin compared with the size of the rest of him, waved about helplessly as he looked. </p>
             <div class="row navbar-fixed-bottom fontbar">
-                <div class="span4 offset5">
+                <div class="fontbar-more">
+                    <i class="hs-icon"><img src="img/glyphicons/glyphicons_187_more.png"/></i>
+                </div>
+                <div id="font-toolbar" class="span4 offset5" style="display: none;">
                     <div style="margin-bottom: 9px" class="btn-toolbar">
                         <div class="btn-group">
                           <button id="change-fontface" class="btn"><i class="icon-font"></i></button>

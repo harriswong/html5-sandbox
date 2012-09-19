@@ -10,3 +10,12 @@
 .hs-icon img {
     width: 14px;
 }
+.fontbar-more {
+    width: 100%;
+    text-align: center;
+    cursor: pointer;
+    padding: 10px 0;
+}
+.btn-more {
+    padding: 10px;
+}
