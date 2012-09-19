@@ -11,18 +11,56 @@
     <body>
         <script>
             $(document).ready(function() {
+                var MIN_FONT_SIZE = 10;
+                var MAX_FONT_SIZE = 30;
+                var DEFAULT_FONT_SIZE = 13;
+                var lineHeightRatio = 18.0/DEFAULT_FONT_SIZE;  //1 font-size = ? line height?
+                                
                 // fontsize adjustment
                 $( "#slider" ).slider({
-                    value:15,
-                    min: 15,
-                    max: 30,
+                    value: DEFAULT_FONT_SIZE,
+                    min: MIN_FONT_SIZE,
+                    max: MAX_FONT_SIZE,
                     step: 1,
                     slide: function( event, ui ) {
-                        var lineHeightRatio = 18.0/13;  //1 font-size = ? line height?
                         console.log(ui);
                         $(".content").css('font-size', ui.value + "px");
-                        $(".content").css('line-height', Math.round(ui.value * lineHeightRatio) + "px");
+                        $(".content").css('line-height', Math.ceil(ui.value * lineHeightRatio) + "px");
                     }
+                });
+                /* bind fontsize to bigger on click
+                 * TODO: refractor with fontssmaller
+                 */
+                $("#change-fontbigger").bind("click", function(e) {
+                    // stripe px off and grab the font size
+                    var originalFontSize = parseFloat($(".content").css('font-size'));
+                    // update it by 1 
+                    var newFontSize = originalFontSize + 1;
+                    if (newFontSize > MAX_FONT_SIZE) {
+                        // out of bound
+                        return;
+                    }
+                    $(".content").css('font-size', newFontSize + "px");
+                    $(".content").css('line-height', Math.ceil(newFontSize * lineHeightRatio) + "px");
+                    // reflect changes on slider, adjust slider position
+                    $( "#slider" ).slider( "value", newFontSize);
+                });
+                /* bind fontsize to smaller on click
+                 * TODO: refractor with fontbigger
+                 */
+                $("#change-fontsmaller").bind("click", function(e) {
+                    // stripe px off and grab the font size
+                    var originalFontSize = parseFloat($(".content").css('font-size'));
+                    // update it by 1
+                    var newFontSize = originalFontSize - 1;
+                    if (newFontSize < MIN_FONT_SIZE) {
+                        // out of bound
+                        return;
+                    }
+                    $(".content").css('font-size', newFontSize + "px");
+                    $(".content").css('line-height', Math.ceil(newFontSize * lineHeightRatio) + "px");
+                    // reflect changes on slider, adjust slider position
+                    $( "#slider" ).slider( "value", newFontSize);
                 });
                 
                 //colour contrast adjustment
@@ -31,7 +69,7 @@
                     if (contrastState === 0) {
                         $("body").css('background-color', "#fff");
                         $("body").css('color', "#000");
-                    } else {
+                    } else {l
                         $("body").css('background-color', "#000");
                         $("body").css('color', "#fff");
                     }
@@ -48,6 +86,8 @@
                         <div class="btn-group">
                           <button id="change-fontface" class="btn"><i class="icon-font"></i></button>
                           <button id="change-contrast" class="btn"><i class="icon-adjust"></i></button>
+                          <button id="change-fontbigger" class="btn"><i class="hs-icon"><img src="img/glyphicons/glyphicons_116_text_bigger.png"></i></button>
+                          <button id="change-fontsmaller" class="btn"><i class="hs-icon"><img src="img/glyphicons/glyphicons_115_text_smaller.png"></i></button>
                           <div class="slider" id="slider"></div>
                         </div>
                     </div>
