@@ -87,7 +87,7 @@ Heartstring.Fontbar = function (container, config) {
      */
     that.bindContrast = function(that) {
         var contrastState = 1; //1 for black text white background, 0 the opposite.
-        Heartstring.select(that.config.selectors.controllerFontBigger).bind("click", function(evt) {
+        Heartstring.select(that.config.selectors.controllerContrast).bind("click", function(evt) {
             if (contrastState === 0) {
                 Heartstring.select(that.config.selectors.body).css('background-color', "#fff");
                 Heartstring.select(that.config.selectors.body).css('color', "#000");

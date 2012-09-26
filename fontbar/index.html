@@ -3,6 +3,8 @@
         <script type="text/javascript" src="jquery-ui/js/jquery-1.7.2.min.js"></script>
         <script type="text/javascript" src="jquery-ui/js/jquery-ui-1.8.22.custom.min.js"></script>
         <script src="bootstrap/js/bootstrap.min.js"></script>
+        <script src="js/Heartstring.js"></script>
+        <script src="js/Fontbar.js"></script>
         <link type="text/css" href="jquery-ui/css/flick/jquery-ui-1.8.22.custom.css" rel="stylesheet" />
         <link type="text/css" href="bootstrap/css/bootstrap.min.css" rel="stylesheet" />
         <link type="text/css" href="styles.css" rel="stylesheet" />
@@ -11,92 +13,35 @@
     <body>
         <script>
             $(document).ready(function() {
-                var MIN_FONT_SIZE = 10;
-                var MAX_FONT_SIZE = 30;
-                var DEFAULT_FONT_SIZE = 13;
-                var lineHeightRatio = 18.0/DEFAULT_FONT_SIZE;  //1 font-size = ? line height?
-                                
-                // fontsize adjustment
-                $( "#slider" ).slider({
-                    value: DEFAULT_FONT_SIZE,
-                    min: MIN_FONT_SIZE,
-                    max: MAX_FONT_SIZE,
-                    step: 1,
-                    slide: function( event, ui ) {
-                        console.log(ui);
-                        $(".content").css('font-size', ui.value + "px");
-                        $(".content").css('line-height', Math.ceil(ui.value * lineHeightRatio) + "px");
-                    }
-                });
-                /* bind fontsize to bigger on click
-                 * TODO: refractor with fontssmaller
-                 */
-                $("#change-fontbigger").bind("click", function(e) {
-                    // stripe px off and grab the font size
-                    var originalFontSize = parseFloat($(".content").css('font-size'));
-                    // update it by 1 
-                    var newFontSize = originalFontSize + 1;
-                    if (newFontSize > MAX_FONT_SIZE) {
-                        // out of bound
-                        return;
-                    }
-                    $(".content").css('font-size', newFontSize + "px");
-                    $(".content").css('line-height', Math.ceil(newFontSize * lineHeightRatio) + "px");
-                    // reflect changes on slider, adjust slider position
-                    $( "#slider" ).slider( "value", newFontSize);
-                });
-                /* bind fontsize to smaller on click
-                 * TODO: refractor with fontbigger
-                 */
-                $("#change-fontsmaller").bind("click", function(e) {
-                    // stripe px off and grab the font size
-                    var originalFontSize = parseFloat($(".content").css('font-size'));
-                    // update it by 1
-                    var newFontSize = originalFontSize - 1;
-                    if (newFontSize < MIN_FONT_SIZE) {
-                        // out of bound
-                        return;
-                    }
-                    $(".content").css('font-size', newFontSize + "px");
-                    $(".content").css('line-height', Math.ceil(newFontSize * lineHeightRatio) + "px");
-                    // reflect changes on slider, adjust slider position
-                    $( "#slider" ).slider( "value", newFontSize);
-                });
-                
-                //colour contrast adjustment
-                var contrastState = 1; //1 for black text white background, 0 the opposite.
-                $("#change-contrast").bind("click", function(e) {
-                    if (contrastState === 0) {
-                        $("body").css('background-color', "#fff");
-                        $("body").css('color', "#000");
-                    } else {l
-                        $("body").css('background-color', "#000");
-                        $("body").css('color', "#fff");
-                    }
-                    contrastState = Math.abs(contrastState - 1);
-                });
-                
-                //toggle state
-                $(".fontbar-more").bind("click", function (e) {
-                    $("#font-toolbar").toggle();
-                });
+                var fontbarConfig = {
+                        selectors: {
+                            content: 'hs-content',
+                            controllerFontBigger: "hs-controller-font-bigger",
+                            controllerFontSmaller: "hs-controller-font-smaller",
+                            controllerContrast: "hs-controller-contrast",
+                            controllerSlider: "hs-controller-slider",
+                            controllerToggler: "hs-controller-toggler", //The button that opens and close the panel.
+                            controller: "#hs-controller" //controller toolbar
+                        }
+                    };
+                Heartstring.Fontbar.init(".hs-fontbar", fontbarConfig);
             });
         </script>
         
         <div class="container">
-            <p class="content"> Grumpy wizards make toxic brew for the evil Queen and Jack. One morning, when Gregor Samsa woke from troubled dreams, he found himself transformed in his bed into a horrible vermin. He lay on his armour-like back, and if he lifted his head a little he could see his brown belly, slightly domed and divided by arches into stiff sections. The bedding was hardly able to cover it and seemed ready to slide off any moment. His many legs, pitifully thin compared with the size of the rest of him, waved about helplessly as he looked. One morning, when Gregor Samsa woke from troubled dreams, he found himself transformed in his bed into a horrible vermin. He lay on his armour-like back, and if he lifted his head a little he could see his brown belly, slightly domed and divided by arches into stiff sections. The bedding was hardly able to cover it and seemed ready to slide off any moment. His many legs, pitifully thin compared with the size of the rest of him, waved about helplessly as he looked. </p>
-            <div class="row navbar-fixed-bottom fontbar">
-                <div class="fontbar-more">
+            <p class="hs-content"> Grumpy wizards make toxic brew for the evil Queen and Jack. One morning, when Gregor Samsa woke from troubled dreams, he found himself transformed in his bed into a horrible vermin. He lay on his armour-like back, and if he lifted his head a little he could see his brown belly, slightly domed and divided by arches into stiff sections. The bedding was hardly able to cover it and seemed ready to slide off any moment. His many legs, pitifully thin compared with the size of the rest of him, waved about helplessly as he looked. One morning, when Gregor Samsa woke from troubled dreams, he found himself transformed in his bed into a horrible vermin. He lay on his armour-like back, and if he lifted his head a little he could see his brown belly, slightly domed and divided by arches into stiff sections. The bedding was hardly able to cover it and seemed ready to slide off any moment. His many legs, pitifully thin compared with the size of the rest of him, waved about helplessly as he looked. </p>
+            <div class="row navbar-fixed-bottom hs-fontbar">
+                <div class="hs-controller-toggler">
                     <i class="hs-icon"><img src="img/glyphicons/glyphicons_187_more.png"/></i>
                 </div>
-                <div id="font-toolbar" class="span4 offset5" style="display: none;">
+                <div id="hs-controller" class="span4 offset5" style="display: none;">
                     <div style="margin-bottom: 9px" class="btn-toolbar">
                         <div class="btn-group">
-                          <button id="change-fontface" class="btn"><i class="icon-font"></i></button>
-                          <button id="change-contrast" class="btn"><i class="icon-adjust"></i></button>
-                          <button id="change-fontbigger" class="btn"><i class="hs-icon"><img src="img/glyphicons/glyphicons_116_text_bigger.png"></i></button>
-                          <button id="change-fontsmaller" class="btn"><i class="hs-icon"><img src="img/glyphicons/glyphicons_115_text_smaller.png"></i></button>
-                          <div class="slider" id="slider"></div>
+                          <button id="hs-controller-font-family" class="btn"><i class="icon-font"></i></button>
+                          <button id="hs-controller-contrast" class="btn"><i class="icon-adjust"></i></button>
+                          <button id="hs-controller-font-bigger" class="btn"><i class="hs-icon"><img src="img/glyphicons/glyphicons_115_text_smaller.png"></i></button>
+                          <button id="hs-controller-font-smaller" class="btn"><i class="hs-icon"><img src="img/glyphicons/glyphicons_116_text_bigger.png"></i></button>
+                          <div class="hs-controler-slider" id="hs-controller-slider"></div>
                         </div>
                     </div>
                 </div>
