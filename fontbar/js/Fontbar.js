@@ -7,6 +7,15 @@ Heartstring.Fontbar = function (container, config) {
     var that = Heartstring.init(Heartstring.Fontbar, config);
     that.lineHeightRatio = 18.0/that.config.selectors.DEFAULT_FONT_SIZE;  //1 font-size = ? line height?
     
+    //this function adjust fontsize based on the new font size given.
+    var adjustFontSize = function(that, newFontSize) {
+        var content = Heartstring.select(that.config.selectors.content);
+        content.css('font-size', newFontSize + "px");
+        content.css('line-height', Math.ceil(newFontSize * that.lineHeightRatio) + "px");
+        // reflect changes on slider, adjust slider position
+        Heartstring.select(that.config.selectors.controllerSlider).slider( "value", newFontSize);
+    };
+    
     /** 
      * Bind rows 
      */
@@ -36,9 +45,7 @@ Heartstring.Fontbar = function (container, config) {
             max: that.config.selectors.MAX_FONT_SIZE,
             step: 1,
             slide: function( event, ui ) {
-                console.log(ui);
-                $(".content").css('font-size', ui.value + "px");
-                $(".content").css('line-height', Math.ceil(ui.value * that.lineHeightRatio) + "px");
+                adjustFontSize(that, ui.value);
             }
         });
     }
@@ -47,38 +54,33 @@ Heartstring.Fontbar = function (container, config) {
      * TODO: refractor with fontssmaller
      */
     that.bindFontSize = function(that) {
-        // stripe px off and grab the font size
-        var originalFontSize = parseFloat(Heartstring.select(that.config.selectors.content));
-        
-        //this function adjust fontsize based on the new font size given.
-        var adjustFontSize = function(newFontSize) {
-            var content = Heartstring.select(that.config.selectors.content);
-            content.css('font-size', newFontSize + "px");
-            content.css('line-height', Math.ceil(newFontSize * that.lineHeightRatio) + "px");
-            // reflect changes on slider, adjust slider position
-            Heartstring.select(that.config.selectors.controllerSlider).slider( "value", newFontSize);
-        };
         
         // Bind bigger button
         Heartstring.select(that.config.selectors.controllerFontBigger).bind("click", function (evt) {
-            //update it by 1
-            var newFontSize = originalFontSize++;
-            if (newFontSize > MAX_FONT_SIZE) {
+            // stripe px off and grab the font size, needs to be calculated everytime
+            var originalFontSize = parseFloat(Heartstring.select(that.config.selectors.content).css('font-size'));
+        
+            //update it by +1
+            var newFontSize = originalFontSize + 1;
+            if (newFontSize > that.config.selectors.MAX_FONT_SIZE) {
                 // out of bound
                 return;
             }
-            adjustFontSize(newFontSize);
+            adjustFontSize(that, newFontSize);
         });
         
         // Bind smaller button
         Heartstring.select(that.config.selectors.controllerFontSmaller).bind("click", function (evt) {
-            //update it by 1
-            var newFontSize = originalFontSize--;
-            if (newFontSize < MIN_FONT_SIZE) {
+            // stripe px off and grab the font size, needs to be calculated everytime
+            var originalFontSize = parseFloat(Heartstring.select(that.config.selectors.content).css('font-size'));
+            
+            //update it by -1
+            var newFontSize = originalFontSize - 1;
+            if (newFontSize < that.config.selectors.MIN_FONT_SIZE) {
                 // out of bound
                 return;
             }
-            adjustFontSize(newFontSize);
+            adjustFontSize(that, newFontSize);
         });
     }
     
@@ -122,6 +124,7 @@ Heartstring.Fontbar.bind = function(that) {
     that.bindRow(that);
     that.bindSlider(that);
     that.bindContrast(that);
+    that.bindFontSize(that);
     that.bindToggler(that);
 }
 
